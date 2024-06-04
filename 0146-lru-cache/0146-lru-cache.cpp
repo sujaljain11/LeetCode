@@ -15,7 +15,7 @@ public:
     Node* head = new Node(-1, -1);
     Node* tail = new Node(-1, -1);
     
-    int cap ;
+    int cap = 0;
     unordered_map<int, Node* > hashmap;
     
     LRUCache(int capacity) {
@@ -46,7 +46,7 @@ public:
             hashmap.erase(key);
             deleteNode(requiredNode);
             addNode(requiredNode);
-            hashmap[key] = head -> next;
+            hashmap[key] = requiredNode;
             return valuee;
         }
         return -1;
@@ -64,7 +64,7 @@ public:
         }
         Node* newNode = new Node(key, value);
         addNode(newNode);
-        hashmap[key] = head -> next;
+        hashmap[key] = newNode;
     }
 };
 
