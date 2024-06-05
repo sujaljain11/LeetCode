@@ -1,30 +1,58 @@
 class Solution {
 public:
     int largestRectangleArea(vector<int>& heights) {
-        stack <int> stack1;
-        int result = 0;
+        int maxArea = 0;
+        stack<int> st;
         int n = heights.size();
-        vector<int> leftSmallest(n, -1), rightSmallest(n, -1);
-        for(int i = 0; i < n; i++) {
-            while(!stack1.empty() && heights[stack1.top()] >= heights[i]) {
-                stack1.pop();
+        for(int i = 0; i <= n; i++) {
+            if(i == n) {
+                while(!st.empty()) {
+                    int x = heights[st.top()];
+                    st.pop();
+                    int width;
+                    if(st.empty()) width = i;
+                    else width = i - st.top() -1;
+                    maxArea = max(maxArea, x * width);
+                }
             }
-            if(stack1.empty()) leftSmallest[i] = 0;
-            else leftSmallest[i] = stack1.top() + 1;
-            stack1.push(i);
-        }
-        while(!stack1.empty()) stack1.pop();
-        for(int i = n-1; i > -1; i--) {
-            while(!stack1.empty() && heights[stack1.top()] >= heights[i]) {
-                stack1.pop();
+            else if(st.empty()) st.push(i);
+            else {
+                while(!st.empty() && heights[i] <= heights[st.top()]) {
+                    int x = st.top();
+                    st.pop();
+                    int width;
+                    if(st.empty()) width = i;
+                    else width = i - st.top() - 1;
+                    maxArea = max(maxArea, heights[x] * width);
+                }
+                st.push(i);
             }
-            if(stack1.empty()) rightSmallest[i] = n-1;
-            else rightSmallest[i] = stack1.top() - 1;
-            stack1.push(i);
         }
-        for(int i = 0; i < n; i++) {
-            result = max(result, heights[i] * (rightSmallest[i] - leftSmallest[i] + 1));
-        }
-        return result;
+        return maxArea;
     }
 };
+
+
+
+
+/*
+int largestRectangleArea(vector < int > & histo) {
+      stack < int > st;
+      int maxA = 0;
+      int n = histo.size();
+      for (int i = 0; i <= n; i++) {
+        while (!st.empty() && (i == n || histo[st.top()] >= histo[i])) {
+          int height = histo[st.top()];
+          st.pop();
+          int width;
+          if (st.empty())
+            width = i;
+          else
+            width = i - st.top() - 1;
+          maxA = max(maxA, width * height);
+        }
+        st.push(i);
+      }
+      return maxA;
+    }
+*/
